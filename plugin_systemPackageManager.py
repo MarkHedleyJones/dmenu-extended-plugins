@@ -210,4 +210,3 @@ class extension(dmenu_extended.dmenu):
                 self.build_package_cache()
             elif selectedIndex == 4:
                 self.update_system()
-
