@@ -1,0 +1,23 @@
+{
+    "settings": {
+        "url": "https://gist.github.com/markjones112358/7700097/raw/dmenuExtended_settings.py",
+        "desc": "(This menu) - Gives access to miscellaneous settings for dmenu-extended and adds a plugin manager",
+        "author": "markjones112358@gmail.com",
+        "date_added": "2014-09-03",
+        "sha1sum": "0a72ec03d4934c76ab70917c8cf735229b0acfea"
+    },
+    "internetSearch": {
+        "url": "https://gist.github.com/markjones112358/7699670/raw/dmenuExtended_internetSearch.py",
+        "desc": "Adds search providers for faster internet searching",
+        "author": "markjones112358@gmail.com",
+        "date_added": "2014-09-01",
+        "sha1sum": "63dcbcb82e5cf9808949100846fcec30d10aae20"
+    },
+    "systemPackageManager": {
+        "url": "https://gist.githubusercontent.com/markjones112358/99aac68bf1a01469b4d1/raw/dmenuExtended_systemPackageManager.py",
+        "desc": "Browse, install, remove and update system packages using your package manager. Supports Arch, Debian & Redhat based distributions",
+        "author": "markjones112358@gmail.com",
+        "date_added": "2014-09-01",
+        "sha1sum": "e077919f98ab5991cc4aac467617e5c025e06c94"
+    }
+} 
