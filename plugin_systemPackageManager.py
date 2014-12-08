@@ -71,8 +71,9 @@ class extension(dmenu_extended.dmenu):
             self.rebuild_notice()
 
 
-    def build_package_cache(self):
-        self.message_open('Building package cache')
+    def build_package_cache(self, message=True):
+        if message:
+            self.message_open('Building package cache')
 
         if self.detected_packageManager == 'pacman':
             packages = self.availablePackages_pacman()
@@ -82,8 +83,9 @@ class extension(dmenu_extended.dmenu):
             packages = self.availablePackages_aptget()
 
         self.cache_save(packages, self.cache_packages)
-        self.message_close()
-        self.menu("Package cache built")
+        if message:
+            self.message_close()
+            self.menu("Package cache built")
 
 
     def availablePackages_pacman(self):
