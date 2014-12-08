@@ -7,7 +7,7 @@
     "plugin_systemPackageManager": {
         "url": "https://raw.githubusercontent.com/markjones112358/dmenu-extended-plugins/master/plugin_systemPackageManager.py",
         "desc": "Browse, install, remove and update system packages using your package manager. Supports Arch, Debian & Redhat based distributions",
-        "sha1sum": "e077919f98ab5991cc4aac467617e5c025e06c94"
+        "sha1sum": "173fc99bdcf76b9cbbcf568fb4a5998f0386389b"
     },
     "plugin_sudo": {
         "url": "https://raw.githubusercontent.com/markjones112358/dmenu-extended-plugins/master/plugin_sudo.py",
