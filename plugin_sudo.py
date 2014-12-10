@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import dmenu_extended
+import sys
 
 if __name__ == "__main__":
     d = dmenu_extended.dmenu()
@@ -16,14 +17,16 @@ if __name__ == "__main__":
     else:
         d.prefs['menu_arguments'] += ['-nf', '#000000']
         d.prefs['menu_arguments'] += ['-nb', '#000000']
-    with open(dmenu_extended.path_plugins+'/plugin_sudo_couter.txt', 'r') as f:
+    with open(dmenu_extended.path_plugins+'/plugin_sudo_counter.txt', 'r') as f:
         message = f.readline()
     pword = d.menu('', prompt=message)
     if pword == '':
         sys.exit()
-    with open(dmenu_extended.path_plugins+'/plugin_sudo_couter.txt', 'w') as f:
-        f.write('Password incorrect, try again:')
-    print(pword+"\n")
+    else:
+        with open(dmenu_extended.path_plugins+'/plugin_sudo_counter.txt', 'w') as f:
+            f.write('Password incorrect, try again:')
+        print(pword+"\n")
+
 
 
 class extension(dmenu_extended.dmenu):
@@ -37,8 +40,27 @@ class extension(dmenu_extended.dmenu):
     # Required function, runs when the user fires the menu item
     def run(self, inputText):
         self.execute("chmod +x " + dmenu_extended.path_plugins+'/plugin_sudo.py')
-        cache = self.cache_open(dmenu_extended.file_cache).split('\n')
+
+        # Accomodate for the change of name file_cacheScanned -> file_cache
+        try:
+            cache = self.cache_open(dmenu_extended.file_cache).split('\n')
+        except AttributeError:
+            cache = self.cache_open(dmenu_extended.file_cacheScanned).split('\n')
+
         item = self.menu(cache)
-        with open(dmenu_extended.path_plugins+'/plugin_sudo_couter.txt', 'w') as f:
-            f.write('Sudo password')
-        self.execute('SUDO_ASKPASS="'+dmenu_extended.path_plugins+'/plugin_sudo.py" sudo -A ' + item)
+        if item[:len(self.prefs['indicator_alias'])] == self.prefs['indicator_alias']:
+            try:
+                item = self.retrieve_aliased_command(item)
+            except AttributeError:
+                self.menu("Please update dmenu-extended to run aliased commands with sudo")
+                sys.exit()
+
+        with open(dmenu_extended.path_plugins+'/plugin_sudo_counter.txt', 'w') as f:
+            f.write('Sudo password:')
+
+        try:
+            self.preCommand = 'SUDO_ASKPASS="'+dmenu_extended.path_plugins+'/plugin_sudo.py" sudo -A '
+            dmenu_extended.handle_command(self, item)
+        except AttributeError:
+            print("NOTICE: Please update dmenu-extended to run non-binary items with sudo")
+            self.execute('SUDO_ASKPASS="'+dmenu_extended.path_plugins+'/plugin_sudo.py" sudo -A ' + item)
