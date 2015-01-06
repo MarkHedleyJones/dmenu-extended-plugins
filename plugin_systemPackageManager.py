@@ -66,7 +66,7 @@ class extension(dmenu_extended.dmenu):
 
         package = self.select(packages, prompt="Uninstall:")
 
-        if type(package) != bool and len(package) > 0:
+        if package is not -1:
             self.open_terminal(self.command_removePackage + package, True)
             self.rebuild_notice()
 
@@ -145,7 +145,7 @@ class extension(dmenu_extended.dmenu):
         return list(set(packages))
 
 
-    def installedPacmagis_pacman(self):
+    def installedPackages_pacman(self):
         packages = self.command_output(self.command_listInstalled)
         out = []
         for package in packages:
@@ -177,7 +177,7 @@ class extension(dmenu_extended.dmenu):
         self.message_close()
 
         package = self.select(packages, prompt="Update:")
-        if type(package) != bool and len(package) > 0:
+        if package is not -1:
             self.open_terminal(self.command_installPackage + package, True)
 
 
