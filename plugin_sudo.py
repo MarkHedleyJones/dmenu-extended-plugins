@@ -28,7 +28,6 @@ if __name__ == "__main__":
         print(pword+"\n")
 
 
-
 class extension(dmenu_extended.dmenu):
 
     # Set the name to appear in the menu
@@ -59,8 +58,9 @@ class extension(dmenu_extended.dmenu):
             f.write('Sudo password:')
 
         try:
-            self.preCommand = 'SUDO_ASKPASS="'+dmenu_extended.path_plugins+'/plugin_sudo.py" sudo -A '
-            dmenu_extended.handle_command(self, item)
+            if self.preCommand is False:
+                self.preCommand = 'SUDO_ASKPASS="'+dmenu_extended.path_plugins+'/plugin_sudo.py" sudo -A '
+                dmenu_extended.handle_command(self, item)
         except AttributeError:
             print("NOTICE: Please update dmenu-extended to run non-binary items with sudo")
             self.execute('SUDO_ASKPASS="'+dmenu_extended.path_plugins+'/plugin_sudo.py" sudo -A ' + item)
