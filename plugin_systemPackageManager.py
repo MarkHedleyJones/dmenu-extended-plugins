@@ -37,6 +37,14 @@ class extension(dmenu_extended.dmenu):
             self.command_listAvailable = 'pacman -Ss'
             self.command_systemUpdate = 'sudo pacman -Syu'
             self.detected_packageManager = 'pacman'
+        elif os.path.exists('/usr/bin/emerge'):
+            # We are Gentoo based
+            self.command_installPackage = 'sudo emerge '
+            self.command_removePackage = 'sudo emerge --unmerge '
+            self.command_listInstalled = 'cd /var/db/pkg/ && ls -d */* | sed \'s/\-[0-9].*$//\' > ' + dmenu_extended.path_cache + '/tmp.txt'
+            self.command_listAvailable = 'emerge --search "" | grep "*  " | cut -c 4- | sed "s/\[ Masked \]//g" | sed -n \'/^app-accessibility/,$p\' > ' + dmenu_extended.path_cache + '/tmp.txt'
+            self.command_systemUpdate = 'sudo emerge --sync && sudo emerge -uDv @world'
+            self.detected_packageManager = 'portage'
 
     def install_package(self):
         packages = self.cache_open(self.cache_packages)
@@ -52,57 +60,103 @@ class extension(dmenu_extended.dmenu):
             self.open_terminal(self.command_installPackage + package.split(' ')[0], True)
             self.rebuild_notice()
 
-
     def remove_package(self):
         self.message_open('Collecting list of installed packages')
-        if self.detected_packageManager == 'pacman':
-            packages = self.installedPackages_pacman()
+        if self.detected_packageManager == 'apt-get':
+            packages = self.installedPackages_aptget()
         elif self.detected_packageManager == 'yum':
             packages = self.installedPackages_yum()
-        elif self.detected_packageManager == 'apt-get':
-            packages = self.installedPackages_aptget()
+        elif self.detected_packageManager == 'pacman':
+            packages = self.installedPackages_pacman()
+        elif self.detected_packageManager == 'portage':
+            packages = self.u_installedPackages_portage()
 
         self.message_close()
 
         package = self.select(packages, prompt="Uninstall:")
-
         if package is not -1:
             self.open_terminal(self.command_removePackage + package, True)
             self.rebuild_notice()
 
+    def update_package(self):
+        self.message_open('Collecting list of installed packages')
+
+        if self.detected_packageManager == 'apt-get':
+            packages = self.installedPackages_aptget()
+        elif self.detected_packageManager == 'yum':
+            packages = self.installedPackages_yum()
+        elif self.detected_packageManager == 'pacman':
+            packages = self.installedPackages_pacman()
+        elif self.detected_packageManager == 'portage':
+            packages = self.installedPackages_portage()
+
+        self.message_close()
+
+        package = self.select(packages, prompt="Update:")
+        if package is not -1:
+            self.open_terminal(self.command_installPackage + package, True)
 
     def build_package_cache(self, message=True):
         if message:
             self.message_open('Building package cache')
 
-        if self.detected_packageManager == 'pacman':
-            packages = self.availablePackages_pacman()
+        if self.detected_packageManager == 'apt-get':
+            packages = self.availablePackages_aptget()
         elif self.detected_packageManager == 'yum':
             packages = self.availablePackages_yum()
-        elif self.detected_packageManager == 'apt-get':
-            packages = self.availablePackages_aptget()
+        elif self.detected_packageManager == 'pacman':
+            packages = self.availablePackages_pacman()
+        elif self.detected_packageManager == 'portage':
+            packages = self.availablePackages_portage()
 
         self.cache_save(packages, self.cache_packages)
         if message:
             self.message_close()
             self.menu("Package cache built")
 
+    def update_system(self):
+        self.open_terminal(self.command_systemUpdate, True)
 
-    def availablePackages_pacman(self):
-        packages = self.command_output(self.command_listAvailable)
+    def installedPackages_aptget(self):
+        packages = self.command_output(self.command_listInstalled)
         out = []
-        last = ""
         for package in packages:
-            if package != "":
-                if package[0:3] == "   ":
-                    last += " - " + package[4:]
-                else:
-                    out.append(last)
-                    last = package
-        out.append(last)
+            tmp = package.split()
+            if len(tmp) > 6:
+                out.append(tmp[1])
         out.sort()
-        return list(set(out[1:]))
+        return list(set(out))
 
+    def installedPackages_yum(self):
+        packages = self.command_output(self.command_listInstalled)
+        out.sort()
+        return list(set(packages))
+
+    def installedPackages_pacman(self):
+        packages = self.command_output(self.command_listInstalled)
+        out = []
+        for package in packages:
+            if len(package) > 0 and package[0] != " ":
+                out.append(package.split(' ')[0])
+        out.sort()
+        return list(set(out))
+
+    def installedPackages_portage(self):
+	os.system(self.command_listInstalled)
+	packages = self.command_output('cat ' + dmenu_extended.path_cache + '/tmp.txt')
+	os.system('rm '  + dmenu_extended.path_cache + '/tmp.txt')
+        return packages
+
+    def u_installedPackages_portage(self):
+	os.system('cd /var/db/pkg/ && ls -d */* > ' + dmenu_extended.path_cache + '/tmp.txt')
+	packages = self.command_output('cat ' + dmenu_extended.path_cache + '/tmp.txt')
+	os.system('rm '  + dmenu_extended.path_cache + '/tmp.txt')
+        return packages
+
+    def availablePackages_aptget(self):
+        packages = self.command_output(self.command_listAvailable)
+        packages.sort()
+        return packages
 
     def availablePackages_yum(self):
         packages = self.command_output(self.command_listAvailable)
@@ -121,39 +175,26 @@ class extension(dmenu_extended.dmenu):
         out.sort()
         return list(set(out[1:]))
 
-
-    def availablePackages_aptget(self):
+    def availablePackages_pacman(self):
         packages = self.command_output(self.command_listAvailable)
-        packages.sort()
+        out = []
+        last = ""
+        for package in packages:
+            if package != "":
+                if package[0:3] == "   ":
+                    last += " - " + package[4:]
+                else:
+                    out.append(last)
+                    last = package
+        out.append(last)
+        out.sort()
+        return list(set(out[1:]))
+
+    def availablePackages_portage(self):
+	os.system(self.command_listAvailable)
+	packages = self.command_output('cat ' + dmenu_extended.path_cache + '/tmp.txt')
+	os.system('rm '  + dmenu_extended.path_cache + '/tmp*')
         return packages
-
-
-    def installedPackages_aptget(self):
-        packages = self.command_output(self.command_listInstalled)
-        out = []
-        for package in packages:
-            tmp = package.split()
-            if len(tmp) > 6:
-                out.append(tmp[1])
-        out.sort()
-        return list(set(out))
-
-
-    def installedPackages_yum(self):
-        packages = self.command_output(self.command_listInstalled)
-        out.sort()
-        return list(set(packages))
-
-
-    def installedPackages_pacman(self):
-        packages = self.command_output(self.command_listInstalled)
-        out = []
-        for package in packages:
-            if len(package) > 0 and package[0] != " ":
-                out.append(package.split(' ')[0])
-        out.sort()
-        return list(set(out))
-
 
     def rebuild_notice(self):
         # gnome-termainal forks from the calling process so this message shows
@@ -162,28 +203,6 @@ class extension(dmenu_extended.dmenu):
             rebuild = self.menu(["Cache may be out-of-date, rebuild at your convenience.", "* Rebuild cache now"])
             if rebuild == "* Rebuild cache now":
                 self.cache_regenerate()
-
-
-    def update_package(self):
-        self.message_open('Collecting list of installed packages')
-
-        if self.detected_packageManager == 'pacman':
-            packages = self.installedPackages_pacman()
-        elif self.detected_packageManager == 'yum':
-            packages = self.installedPackages_yum()
-        elif self.detected_packageManager == 'apt-get':
-            packages = self.installedPackages_aptget()
-
-        self.message_close()
-
-        package = self.select(packages, prompt="Update:")
-        if package is not -1:
-            self.open_terminal(self.command_installPackage + package, True)
-
-
-    def update_system(self):
-        self.open_terminal(self.command_systemUpdate, True)
-
 
     def run(self, inputText):
 
