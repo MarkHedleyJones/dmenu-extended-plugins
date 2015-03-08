@@ -2,6 +2,7 @@
 import dmenu_extended
 import os
 
+
 class extension(dmenu_extended.dmenu):
 
     title = 'System package management'
@@ -129,7 +130,7 @@ class extension(dmenu_extended.dmenu):
 
     def installedPackages_yum(self):
         packages = self.command_output(self.command_listInstalled)
-        out.sort()
+        packages.sort()
         return list(set(packages))
 
     def installedPackages_pacman(self):
@@ -142,15 +143,15 @@ class extension(dmenu_extended.dmenu):
         return list(set(out))
 
     def installedPackages_portage(self):
-	os.system(self.command_listInstalled)
-	packages = self.command_output('cat ' + dmenu_extended.path_cache + '/tmp.txt')
-	os.system('rm '  + dmenu_extended.path_cache + '/tmp.txt')
+        os.system(self.command_listInstalled)
+        packages = self.command_output('cat ' + dmenu_extended.path_cache + '/tmp.txt')
+        os.system('rm '  + dmenu_extended.path_cache + '/tmp.txt')
         return packages
 
     def u_installedPackages_portage(self):
-	os.system('cd /var/db/pkg/ && ls -d */* > ' + dmenu_extended.path_cache + '/tmp.txt')
-	packages = self.command_output('cat ' + dmenu_extended.path_cache + '/tmp.txt')
-	os.system('rm '  + dmenu_extended.path_cache + '/tmp.txt')
+        os.system('cd /var/db/pkg/ && ls -d */* > ' + dmenu_extended.path_cache + '/tmp.txt')
+        packages = self.command_output('cat ' + dmenu_extended.path_cache + '/tmp.txt')
+        os.system('rm '  + dmenu_extended.path_cache + '/tmp.txt')
         return packages
 
     def availablePackages_aptget(self):
@@ -191,9 +192,9 @@ class extension(dmenu_extended.dmenu):
         return list(set(out[1:]))
 
     def availablePackages_portage(self):
-	os.system(self.command_listAvailable)
-	packages = self.command_output('cat ' + dmenu_extended.path_cache + '/tmp.txt')
-	os.system('rm '  + dmenu_extended.path_cache + '/tmp*')
+        os.system(self.command_listAvailable)
+        packages = self.command_output('cat ' + dmenu_extended.path_cache + '/tmp.txt')
+        os.system('rm '  + dmenu_extended.path_cache + '/tmp*')
         return packages
 
     def rebuild_notice(self):
