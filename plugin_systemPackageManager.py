@@ -30,6 +30,13 @@ class extension(dmenu_extended.dmenu):
             self.command_listAvailable = ["yum", "search", ""]
             self.command_systemUpdate = 'sudo yum update'
             self.detected_packageManager = 'yum'
+        elif os.path.exists('/usr/bin/dnf'):
+            self.command_installPackage = 'sudo dnf install '
+            self.command_removePackage = 'sudo dnf remove '
+            self.command_listInstalled = 'dnf list installed'
+            self.command_listAvailable = ["dnf", "search", ""]
+            self.command_systemUpdate = 'sudo dnf update'
+            self.detected_packageManager = 'dnf'
         elif os.path.exists('/usr/bin/pacman'):
             # We are Arch based
             self.command_installPackage = 'sudo pacman -S '
@@ -67,6 +74,8 @@ class extension(dmenu_extended.dmenu):
             packages = self.installedPackages_aptget()
         elif self.detected_packageManager == 'yum':
             packages = self.installedPackages_yum()
+        elif self.detected_packageManager == 'dnf':
+            packages = self.installedPackages_dnf()
         elif self.detected_packageManager == 'pacman':
             packages = self.installedPackages_pacman()
         elif self.detected_packageManager == 'portage':
@@ -86,6 +95,8 @@ class extension(dmenu_extended.dmenu):
             packages = self.installedPackages_aptget()
         elif self.detected_packageManager == 'yum':
             packages = self.installedPackages_yum()
+        elif self.detected_packageManager == 'dnf':
+            packages = self.installedPackages_dnf()
         elif self.detected_packageManager == 'pacman':
             packages = self.installedPackages_pacman()
         elif self.detected_packageManager == 'portage':
@@ -105,6 +116,8 @@ class extension(dmenu_extended.dmenu):
             packages = self.availablePackages_aptget()
         elif self.detected_packageManager == 'yum':
             packages = self.availablePackages_yum()
+        elif self.detected_packageManager == 'dnf':
+            packages = self.availablePackages_dnf()
         elif self.detected_packageManager == 'pacman':
             packages = self.availablePackages_pacman()
         elif self.detected_packageManager == 'portage':
@@ -129,6 +142,11 @@ class extension(dmenu_extended.dmenu):
         return list(set(out))
 
     def installedPackages_yum(self):
+        packages = self.command_output(self.command_listInstalled)
+        packages.sort()
+        return list(set(packages))
+    
+    def installedPackages_dnf(self):
         packages = self.command_output(self.command_listInstalled)
         packages.sort()
         return list(set(packages))
@@ -160,6 +178,23 @@ class extension(dmenu_extended.dmenu):
         return packages
 
     def availablePackages_yum(self):
+        packages = self.command_output(self.command_listAvailable)
+        out = []
+        last = ""
+        for package in packages:
+            tmp = package.split( ' : ' )
+            if len(tmp) > 1:
+                if tmp[0][0] == " ":
+                    last += " " + tmp[1]
+                else:
+                    out.append(last)
+                    last = tmp[0].split('.')[0] + ' - ' + tmp[1]
+
+        out.append(last)
+        out.sort()
+        return list(set(out[1:]))
+    
+    def availablePackages_dnf(self):
         packages = self.command_output(self.command_listAvailable)
         out = []
         last = ""
