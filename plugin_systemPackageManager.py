@@ -37,7 +37,6 @@ class extension(dmenu_extended.dmenu):
             self.command_listAvailable = ["dnf", "search", ""]
             self.command_systemUpdate = 'sudo dnf update'
             self.detected_packageManager = 'dnf'
-
         elif os.path.exists('/usr/bin/pacman'):
             # We are Arch based
             self.command_installPackage = 'sudo pacman -S '
