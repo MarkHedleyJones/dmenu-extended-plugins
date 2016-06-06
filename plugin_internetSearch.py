@@ -17,19 +17,19 @@ class extension(dmenu_extended.dmenu):
             'providers': [
                 {
                     'title': 'Google',
-                    'url': 'https://www.google.com/search?q='
+                    'url': 'https://www.google.com/search?q=%keywords%'
                 },
                 {
                     'title': 'Wikipedia',
-                    'url': 'https://en.wikipedia.org/wiki/Special:Search?search='
+                    'url': 'https://en.wikipedia.org/wiki/Special:Search?search=%keywords%'
                 },
                 {
                     'title': 'Google images',
-                    'url': 'https://www.google.com/images?q='
+                    'url': 'https://www.google.com/images?q=%keywords%'
                 },
                 {
                     'title': 'Github',
-                    'url':  'https://github.com/search?q='
+                    'url':  'https://github.com/search?q=%keywords%'
                 }
             ],
             'default': 'Google'
@@ -51,9 +51,9 @@ class extension(dmenu_extended.dmenu):
         fallback = False
         for provider in self.providers['providers']:
             if provider['title'] == default:
-                fallback = provider['url'] + searchTerm
+                fallback = provider['url'].replace("%keywords%", searchTerm)
             elif provider['title'] == providerName:
-                primary = provider['url'] + searchTerm
+                primary = provider['url'].replace("%keywords%", searchTerm)
 
         if primary:
             self.open_url(primary)
