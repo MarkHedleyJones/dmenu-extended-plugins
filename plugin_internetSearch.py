@@ -9,27 +9,24 @@ class extension(dmenu_extended.dmenu):
     is_submenu = True
 
 
-    def __init__(self):
-        self.load_preferences()
-
     def create_default_providers(self):
         default = {
             'providers': [
                 {
                     'title': 'Google',
-                    'url': 'https://www.google.com/search?q=%keywords%'
+                    'url': 'https://www.google.com/search?q={searchterm}'
                 },
                 {
                     'title': 'Wikipedia',
-                    'url': 'https://en.wikipedia.org/wiki/Special:Search?search=%keywords%'
+                    'url': 'https://en.wikipedia.org/wiki/Special:Search?search={searchterm}'
                 },
                 {
                     'title': 'Google images',
-                    'url': 'https://www.google.com/images?q=%keywords%'
+                    'url': 'https://www.google.com/images?q={searchterm}'
                 },
                 {
                     'title': 'Github',
-                    'url':  'https://github.com/search?q=%keywords%'
+                    'url':  'https://github.com/search?q={searchterm}'
                 }
             ],
             'default': 'Google'
@@ -42,6 +39,19 @@ class extension(dmenu_extended.dmenu):
         if providers == False:
             self.create_default_providers()
             providers = self.load_json(file_prefs)
+
+        uptodate = False
+        for provider in providers['providers']:
+            if provider['url'].find('{searchterm}') != -1:
+                uptodate = True
+                break
+
+        if not uptodate:
+            print('Search providers list is out-of-date, replacing (old list saved)')
+            self.save_json(file_prefs[:-5]+'_old.json', providers)
+            self.create_default_providers()
+            return self.load_providers()
+
         return providers
 
 
@@ -49,11 +59,14 @@ class extension(dmenu_extended.dmenu):
         default = self.providers['default']
         primary = False
         fallback = False
+
         for provider in self.providers['providers']:
             if provider['title'] == default:
-                fallback = provider['url'].replace("%keywords%", searchTerm)
+                # fallback = provider['url'].replace("%keywords%", searchTerm)
+                fallback = provider['url'].format(searchterm=searchTerm)
             elif provider['title'] == providerName:
-                primary = provider['url'].replace("%keywords%", searchTerm)
+                # primary = provider['url'].replace("%keywords%", searchTerm)
+                primary = provider['url'].format(searchterm=searchTerm)
 
         if primary:
             self.open_url(primary)
