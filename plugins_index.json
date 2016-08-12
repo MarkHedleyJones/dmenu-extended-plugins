@@ -2,7 +2,7 @@
     "plugin_internetSearch": {
         "url": "https://raw.githubusercontent.com/markjones112358/dmenu-extended-plugins/master/plugin_internetSearch.py",
         "desc": "Adds search providers for faster internet searching",
-        "sha1sum": "629373b4f114aa74ec0fb4c2c93231f158015f3d"
+        "sha1sum": "299fa0970d045e19e4638a232d23c0b0c61ad1c8"
     },
     "plugin_systemPackageManager": {
         "url": "https://raw.githubusercontent.com/markjones112358/dmenu-extended-plugins/master/plugin_systemPackageManager.py",
