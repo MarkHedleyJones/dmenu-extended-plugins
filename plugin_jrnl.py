@@ -238,7 +238,7 @@ class extension(dmenu_extended.dmenu):
       proc.sendline(self.get_journal_password(journal))
     proc.expect(["Enter new password: "])
     print('step')
-    pword = self.menu(" ", prompt="Enter new password: ")
+    pword = self.get_password(helper_text="create new password")
     kchain = self.menu(["No", "Yes"], prompt="Add password to your keychain?")
     print('step')
     print(pword)
