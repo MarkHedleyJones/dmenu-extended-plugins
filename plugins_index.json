@@ -15,6 +15,10 @@
         "url": "https://raw.githubusercontent.com/markjones112358/dmenu-extended-plugins/master/plugin_jrnl.py",
         "desc": "Interation with 'jrnl', a command line journal that is future-proof and secure",
         "sha1sum": "dc45e44a9fa6c0c93d647b4e7f9cee3607fea9d9",
-        "min_version": 16.08
+        "min_version": 16.08,
+        "dependencies": [
+            "pexpect",
+            ("jrnl", "http://jrnl.sh/installation.html")
+        ]
     }
 }
