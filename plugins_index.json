@@ -18,7 +18,7 @@
         "min_version": 16.08,
         "dependencies": [
             "pexpect",
-            {"jrnl", "http://jrnl.sh/installation.html"}
+            "jrnl - http://jrnl.sh/installation.html"
         ]
     }
 }
