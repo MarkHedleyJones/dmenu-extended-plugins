@@ -109,23 +109,16 @@ class extension(dmenu_extended.dmenu):
 
   def setup_jrnl(self):
     command = "jrnl"
-    path = self.menu("~/journal.txt", prompt="Path to your journal file:\n")
-    encrypt = self.menu("No\nYes", prompt="Encrypt your journal?:\n")
+    path = self.menu("~/journal.txt", prompt="Path to your journal file:")
+    encrypt = self.menu("No\nYes", prompt="Encrypt your journal?:")
     if encrypt == "Yes":
       pword = self.get_password(helper_text="encryption password")
       store_in_keychain = self.menu("No\nYes", prompt="Store password in system keychain?:\n")
-    print('a')
     proc = pexpect.spawn(command)
-    print('b')
     proc.expect(["Path to your journal file.*"])
-    print('c',path)
     proc.sendline(path)
-    print('d')
     proc.expect(["Enter password for journal.*"])
-    print('e')
     if encrypt == "Yes":
-      print('f',pword)
-      print(store_in_keychain.lower()[0])
       proc.sendline(pword)
       proc.expect(["Do you want to store the password in your keychain?.*"])
       if store_in_keychain.lower()[0] == 'y':
@@ -133,7 +126,6 @@ class extension(dmenu_extended.dmenu):
       else:
         proc.sendline('n')
     else:
-      print('g')
       proc.sendline("")
     proc.expect([".*Compose Entry.*"])
     proc.close()
