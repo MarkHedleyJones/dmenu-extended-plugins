@@ -337,20 +337,39 @@ class extension(dmenu_extended.dmenu):
       # Terminal based
       self.open_terminal("jrnl -from {date} -to {date} --edit".format(date=date_str))
 
+  def iso_date_str(self, date_in):
+    return date_in.strftime("%Y-%m-%d")
+
   def add_entry(self):
     print("adding entry")
-    opts = [
-      self.prefs['indicator_submenu'] + " Today",
-      self.prefs['indicator_submenu'] + " Yesterday",
-    ]
     today = datetime.datetime.today()
-    for i in range(1,6):
-      tmp = datetime.timedelta(days=i)
-      opts.append(self.prefs['indicator_submenu'] + " " + (today - tmp).strftime("%A"))
-    for i in range(6,13):
-      tmp = datetime.timedelta(days=i)
-      opts.append(self.prefs['indicator_submenu'] + " Last " + (today - tmp).strftime("%A"))
-    date = self.select(opts, prompt="Entry date: ")[len(self.prefs['indicator_submenu']) + 1:]
+    daydiff = datetime.timedelta(days=1)
+    opts = [
+      self.prefs['indicator_submenu'] + " " + self.iso_date_str(today) + " - Today (" + today.strftime("%A") + ")",
+      self.prefs['indicator_submenu'] + " " + self.iso_date_str(today) + " - Yesterday (" + (today - daydiff).strftime("%A") + ")",
+    ]
+
+    for i in range(2,256):
+      out = [self.prefs['indicator_submenu']]
+      # tmp = datetime.timedelta(days=i)
+      dtmp = today - i * daydiff
+      out.append(self.iso_date_str(dtmp))
+      out.append("-")
+
+      if i < 7:
+        out.append(dtmp.strftime("%A"))
+      elif i <= 13:
+        out.append("Last")
+        out.append(dtmp.strftime("%A"))
+      elif i <= 22:
+        out.append(dtmp.strftime("%A"))
+        out.append("before last")
+      else:
+        out.append(dtmp.strftime("%A %d %B"))
+
+      opts.append(" ".join(out))
+
+    date = self.select(opts, prompt="Entry date: ")[len(self.prefs['indicator_submenu']) + 1:len(self.prefs['indicator_submenu']) + 11]
     content = self.menu(" ", prompt=date + ": ")
     command = ["jrnl", self.current_journal, date + ":", content]
     self.run_journal_command(command, self.current_journal)
