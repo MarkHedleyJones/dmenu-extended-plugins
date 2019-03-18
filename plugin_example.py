@@ -1,4 +1,4 @@
-import dmenu_extended
+import dmenu_extended.main as dmenu_extended
 import sys
 
 class extension(dmenu_extended.dmenu):
