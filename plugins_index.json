@@ -2,20 +2,20 @@
     "plugin_internetSearch": {
         "url": "https://raw.githubusercontent.com/markhedleyjones/dmenu-extended-plugins/master/plugin_internetSearch.py",
         "desc": "Adds search providers for faster internet searching",
-        "sha1sum": "299fa0970d045e19e4638a232d23c0b0c61ad1c8",
-        "min_version": 0.0
+        "sha1sum": "f3312818e5232402680534ee4066965754852e56",
+        "min_version": 19.0318
     },
     "plugin_systemPackageManager": {
         "url": "https://raw.githubusercontent.com/markhedleyjones/dmenu-extended-plugins/master/plugin_systemPackageManager.py",
         "desc": "Browse, install, remove and update system packages using your package manager. Supports Arch, Debian, Gentoo, and Redhat based distributions",
-        "sha1sum": "64a28e50f0469f19617b99ab38961f4ec5571a25",
-        "min_version": 0.0
+        "sha1sum": "765b848ae427d50714a482fb450b8d9b38db31a7",
+        "min_version": 19.0318
     },
     "plugin_jrnl": {
         "url": "https://raw.githubusercontent.com/markhedleyjones/dmenu-extended-plugins/master/plugin_jrnl.py",
         "desc": "Interation with 'jrnl', a command line journal that is future-proof and secure",
-        "sha1sum": "bcb5d2ec4788a972867b2d6581d68d20c9c03b4a",
-        "min_version": 16.1023,
+        "sha1sum": "b79c4e3f5049f694ceb43780260df6439011c006",
+        "min_version": 19.0318,
         "dependencies": {
             "python": [
                 "pexpect"
