@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-import dmenu_extended.main as dmenu_extended
+import dmenu_extended
 import os
 
 
@@ -145,7 +145,7 @@ class extension(dmenu_extended.dmenu):
         packages = self.command_output(self.command_listInstalled)
         packages.sort()
         return list(set(packages))
-
+    
     def installedPackages_dnf(self):
         packages = self.command_output(self.command_listInstalled)
         packages.sort()
@@ -193,7 +193,7 @@ class extension(dmenu_extended.dmenu):
         out.append(last)
         out.sort()
         return list(set(out[1:]))
-
+    
     def availablePackages_dnf(self):
         packages = self.command_output(self.command_listAvailable)
         out = []

@@ -1,4 +1,4 @@
-import dmenu_extended.main as dmenu_extended
+import dmenu_extended
 import sys
 
 file_prefs = dmenu_extended.path_prefs + '/internetSearch.json'
