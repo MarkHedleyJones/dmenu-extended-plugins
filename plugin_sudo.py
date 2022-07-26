@@ -1,4 +1,3 @@
-#!/usr/bin/python
 import dmenu_extended
 import sys
 

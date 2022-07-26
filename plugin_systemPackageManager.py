@@ -1,4 +1,3 @@
-# -*- coding: utf8 -*-
 import dmenu_extended
 import os
 
