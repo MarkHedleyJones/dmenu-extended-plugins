@@ -84,7 +84,7 @@ class extension(dmenu_extended.dmenu):
         self.message_close()
 
         package = self.select(packages, prompt="Uninstall:")
-        if package is not -1:
+        if package != -1:
             self.open_terminal(self.command_removePackage + package, True)
             self.rebuild_notice()
 
@@ -105,7 +105,7 @@ class extension(dmenu_extended.dmenu):
         self.message_close()
 
         package = self.select(packages, prompt="Update:")
-        if package is not -1:
+        if package != -1:
             self.open_terminal(self.command_installPackage + package, True)
 
     def build_package_cache(self, message=True):
