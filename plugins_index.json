@@ -13,7 +13,7 @@
     "plugin_systemPackageManager": {
         "url": "https://raw.githubusercontent.com/markhedleyjones/dmenu-extended-plugins/master/plugin_systemPackageManager.py",
         "desc": "Browse, install, remove and update system packages using your package manager. Supports Arch, Debian, Gentoo, and Redhat based distributions",
-        "sha1sum": "64a28e50f0469f19617b99ab38961f4ec5571a25",
+        "sha1sum": "7282745ce289c34e8cc6e23016753282277ac8b3",
         "_min_version_comment": "min_version will be depreciated after 2024-08-01, plugins should use semantic-based requirements field",
         "min_version": 0.0,
         "requirements": {
